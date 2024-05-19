@@ -1,11 +1,14 @@
 import { CartContextProvider } from '../src/context/cart';
+import { FilteredItemsProvider } from '../src/context/filteredItems';
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
 	return (
-		<CartContextProvider>
-			<Component {...pageProps} />
-		</CartContextProvider>
+		<FilteredItemsProvider>
+			<CartContextProvider>
+				<Component {...pageProps} />
+			</CartContextProvider>
+		</FilteredItemsProvider>
 	);
 }
 

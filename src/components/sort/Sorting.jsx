@@ -1,17 +1,11 @@
-import React, { useState } from 'react';
-import items from '../../data/items.json';
+import React from 'react';
+import { useFilteredItems } from '../../context/filteredItems';
 
-const Sorting = ({ setFilteredItems, searchResults }) => {
-	const [price, setPrice] = useState(750);
-
-	// PRICE FILTER HANDLER
+const Sorting = ({ price, setPrice }) => {
+	const { setFilteredItems, filteredItems } = useFilteredItems();
 	const priceFilter = (e) => {
 		setPrice(e.target.value < 1 ? 1 : e.target.value);
-
-		const filtered = searchResults?.filter((item) => item.price <= price);
-
-		console.log({ filtered });
-		setFilteredItems(filtered);
+		setFilteredItems(filteredItems?.filter((item) => item.price <= price));
 	};
 
 	return (
