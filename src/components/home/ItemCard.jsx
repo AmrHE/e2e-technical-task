@@ -1,18 +1,17 @@
 import { StarIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
+import { useCartContext } from '../../context/cart';
 
 const ItemCard = ({ item }) => {
-	// <div className="flex-[0_1_30%] flex flex-col justify-between min-h-24 p-4 bg-white rounded-lg space-y-10">
-	// 	<div className="flex flex-row justify-between text-xl">
-	// 		<p className="w-2/3 font-semibold capitalize line-clamp-1">
-	// 			{item.name}
-	// 		</p>
-	// 		<p className="content-end font-semibold">$ {item.price}</p>
-	// 	</div>
-	// 	<div className="line-clamp-3">
-	// 		<p>{item.description}</p>
-	// 	</div>
-	// </div>
+	const { cartItems, setCartItems } = useCartContext();
+
+	const handleAddToCart = () => {
+		if (cartItems.includes(item)) {
+			setCartItems(cartItems);
+		} else {
+			setCartItems([...cartItems, item]);
+		}
+	};
 	return (
 		<div className="relative z-40 flex flex-col p-8 m-5 bg-white rounded-xl">
 			<p className="absolute text-xs italic text-gray-400 top-2 right-2">
@@ -48,10 +47,7 @@ const ItemCard = ({ item }) => {
 				<p>${item.price}</p>
 			</div>
 
-			<button
-				// onClick={handleAddToCart}
-				className="button"
-			>
+			<button onClick={handleAddToCart} className="button">
 				Add to Cart
 			</button>
 		</div>

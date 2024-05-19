@@ -6,7 +6,7 @@ const SearchBar = ({ setSearchQuery }) => {
 		setSearchQuery(query);
 	};
 	return (
-		<div className="flex items-center justify-center mb-10">
+		<div className="flex items-center justify-center">
 			<input
 				type="text"
 				className="p-2 border border-r-0 border-gray-300 border-solid outline-none"
