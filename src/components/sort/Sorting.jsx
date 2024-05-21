@@ -1,34 +1,58 @@
 import React from 'react';
-import { useFilteredItems } from '../../context/filteredItems';
+import { useSortedItems } from '../../context/sortedItems';
 
-const Sorting = ({ price, setPrice }) => {
-	const { setFilteredItems, filteredItems } = useFilteredItems();
-	const priceFilter = (e) => {
-		setPrice(e.target.value < 1 ? 1 : e.target.value);
-		setFilteredItems(filteredItems?.filter((item) => item.price <= price));
+const Sorting = () => {
+	const { setSortedItems, sortedItems, sortingCondition, setSortingCondition } =
+		useSortedItems();
+
+	const handleSelect = (e) => {
+		setSortingCondition(e.target.value);
+		if (e.target.value === '0-1') {
+			setSortedItems(sortedItems.sort((a, b) => a.price - b.price));
+		}
+		if (e.target.value === '1-0') {
+			setSortedItems(sortedItems.sort((a, b) => b.price - a.price));
+		}
+		if (e.target.value === 'a-z') {
+			setSortedItems(sortedItems.sort((a, b) => a.name.localeCompare(b.name)));
+		}
+		if (e.target.value === 'z-a') {
+			setSortedItems(sortedItems.sort((a, b) => b.name.localeCompare(a.name)));
+		}
 	};
 
-	return (
-		<div className="flex flex-col mt-10">
-			<div className="pr-10 mb-4">
-				<h2 className="text-base font-bold text-gray-600">
-					Price: $1 to ${price}
-				</h2>
-				<div className="flex flex-col my-5">
-					<input
-						type="range"
-						min="1"
-						max="750"
-						value={price}
-						onChange={priceFilter}
-					/>
-				</div>
+	console.log({ sortingCondition });
 
-				<div className="flex items-center justify-between text-base font-semibold text-gray-400">
-					<p>$1</p>
-					<p>$750</p>
-				</div>
-			</div>
+	return (
+		<div className="pr-10 lg:my-5">
+			<p className="my-2 text-base font-bold text-gray-600">Sort by:</p>
+			<select
+				name="sort by"
+				id=""
+				value={sortingCondition}
+				onChange={handleSelect}
+				className="w-full p-3 rounded-md"
+			>
+				<option
+					value=""
+					className="my-5 capitalize"
+					disabled={sortingCondition}
+				>
+					Sort By
+				</option>
+				<option key="a-z" className="capitalize" value="a-z">
+					alphabetical order: A to Z
+				</option>
+				<option key="z-a" className="capitalize" value="z-a">
+					alphabetical order: Z to A
+				</option>
+				<option key="0-1" className="capitalize" value="0-1">
+					Price: Low to High
+				</option>
+				<option key="1-0" className="capitalize" value="1-0">
+					Price: High to Low
+				</option>
+			</select>
 		</div>
 	);
 };

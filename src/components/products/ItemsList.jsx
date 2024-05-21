@@ -1,37 +1,54 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import items from '../../data/items.json';
+import React, { useEffect, useState } from 'react';
 import ItemCard from './ItemCard';
 import { useFilteredItems } from '../../context/filteredItems';
+import { useSortedItems } from '../../context/sortedItems';
 
-const ItemsList = ({ searchQuery, price }) => {
-	const { setFilteredItems, filteredItems } = useFilteredItems();
-
-	const searchItems = () => {
-		if (searchQuery) {
-			setFilteredItems(
-				items.items.filter(
-					(item) =>
-						item?.name.toLowerCase().trim().includes(searchQuery) &&
-						item.price <= price
-				)
-			);
-		} else if (searchQuery === '') {
-			setFilteredItems(items.items);
-		}
-	};
+const ItemsList = ({ price }) => {
+	const { filteredItems } = useFilteredItems();
+	const { sortedItems, setSortedItems, sortingCondition } = useSortedItems();
 
 	useEffect(() => {
-		searchItems();
-	}, [searchQuery]);
-
-	useEffect(() => {}, [searchQuery, filteredItems]);
+		if (sortingCondition) {
+			console.log(sortingCondition);
+			if (sortingCondition === '0-1') {
+				setSortedItems(
+					filteredItems
+						.filter((item) => item.price <= price)
+						.sort((a, b) => a.price - b.price)
+				);
+			}
+			if (sortingCondition === '1-0') {
+				setSortedItems(
+					filteredItems
+						.filter((item) => item.price <= price)
+						.sort((a, b) => b.price - a.price)
+				);
+			}
+			if (sortingCondition === 'a-z') {
+				setSortedItems(
+					filteredItems
+						.filter((item) => item.price <= price)
+						.sort((a, b) => a.name.localeCompare(b.name))
+				);
+			}
+			if (sortingCondition === 'z-a') {
+				setSortedItems(
+					filteredItems
+						.filter((item) => item.price <= price)
+						.sort((a, b) => b.name.localeCompare(a.name))
+				);
+			}
+		} else {
+			setSortedItems(filteredItems.filter((item) => item.price <= price));
+		}
+	}, [filteredItems, price]);
 
 	return (
 		<div className="grid grid-flow-row-dense md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-			{filteredItems.length > 0 ? (
-				filteredItems.map((item, i) => <ItemCard item={item} key={i} />)
+			{sortedItems?.length > 0 ? (
+				sortedItems.map((item, i) => <ItemCard item={item} key={i} />)
 			) : (
 				<div className="text-xl font-medium capitalize">
 					no results found...
